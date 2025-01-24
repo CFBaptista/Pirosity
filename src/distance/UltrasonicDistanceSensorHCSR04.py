@@ -32,11 +32,11 @@ class UltrasonicDistanceSensorHCSR04:
         return distance
 
     def _trigger_burst(self) -> None:
-        GPIO.output(self._trigger_pin, False)
+        GPIO.output(self.pin_trigger, False)
         time.sleep(HCSR04Data.duration_wait)
-        GPIO.output(self._trigger_pin, True)
+        GPIO.output(self.pin_trigger, True)
         time.sleep(HCSR04Data.duration_trigger)
-        GPIO.output(self._trigger_pin, False)
+        GPIO.output(self.pin_trigger, False)
 
     def _transmit_end_time(self) -> float:
         while GPIO.input(self._echo_pin) is False:
