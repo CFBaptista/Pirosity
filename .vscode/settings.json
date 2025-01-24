@@ -1,0 +1,6 @@
+{
+    "editor.formatOnSave": true,
+    "python.defaultInterpreterPath": ".venv/Scripts/python",
+    "ruff.configuration": "pyproject.toml",
+    "ruff.enable": true,
+}
