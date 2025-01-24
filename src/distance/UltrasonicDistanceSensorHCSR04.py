@@ -52,7 +52,7 @@ class UltrasonicDistanceSensorHCSR04:
 
     def _compute_distance(self, transmit_end_time: float, receive_start_time: float) -> float:
         time_elapsed = receive_start_time - transmit_end_time
-        distance = HCSR04Data.speed_of_sound * time_elapsed / 2
+        distance = self.speed_of_sound * time_elapsed / 2
         return distance
 
     @property
