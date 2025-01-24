@@ -40,13 +40,13 @@ class UltrasonicDistanceSensorHCSR04:
 
     def _transmit_end_time(self) -> float:
         while GPIO.input(self.pin_echo) is False:
-            pass
+            continue
         transmitted_signal_end_time = time.time()
         return transmitted_signal_end_time
 
     def _receive_start_time(self) -> float:
         while GPIO.input(self.pin_echo) is True:
-            pass
+            continue
         received_signal_start_time = time.time()
         return received_signal_start_time
 
