@@ -55,6 +55,9 @@ class UltrasonicDistanceSensorHCSR04:
         distance = self.speed_of_sound * time_elapsed / 2
         return distance
 
+    def reset(self) -> None:
+        GPIO.cleanup()
+
     @property
     def pin_trigger(self) -> int:
         return self._pin_trigger
