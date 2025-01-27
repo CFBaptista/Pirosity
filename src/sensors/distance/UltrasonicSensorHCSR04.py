@@ -11,7 +11,7 @@ class HCSR04Data:
     duration_wait: float = 0.000002
 
 
-class UltrasonicDistanceSensorHCSR04:
+class UltrasonicSensorHCSR04:
     def __init__(self, pin_trigger: int, pin_echo: int, speed_of_sound: float = 343.0) -> None:
         self._pin_trigger = pin_trigger
         self._pin_echo = pin_echo
