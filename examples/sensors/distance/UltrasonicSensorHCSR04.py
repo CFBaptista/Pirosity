@@ -7,7 +7,7 @@ sensor = UltrasonicSensorHCSR04(16, 18, speed_of_sound=343.0)
 try:
     while True:
         distance = sensor.measure()
-        print(f"Distance: {distance * 100} cm")
+        print(f"Distance: {round(distance * 100, 1)} cm")
         time.sleep(0.25)
 except KeyboardInterrupt:
     print("Exiting program due to keyboard interruption.")
