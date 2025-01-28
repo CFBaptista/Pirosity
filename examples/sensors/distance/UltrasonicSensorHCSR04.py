@@ -2,7 +2,7 @@ import time
 
 from pirosity.sensors.distance import UltrasonicSensorHCSR04
 
-sensor = UltrasonicSensorHCSR04(16, 18, speed_of_sound=343.0)
+sensor = UltrasonicSensorHCSR04(23, 24, speed_of_sound=343.0)
 
 try:
     while True:
