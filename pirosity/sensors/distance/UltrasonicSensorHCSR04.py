@@ -11,23 +11,20 @@ class HCSR04Data:
 
     Attributes
     ----------
-    duration_timeout : float
+    `distance_maximum` : float
+        Maximum measurable distance by the sensor in meters.
+    `distance_minimum` : float
+        Minimum measurable distance by the sensor in meters.
+    `duration_timeout` : float
         Duration after which the sensor times out if no echo signal is received.
-    duration_trigger : float
+    `duration_trigger` : float
         Duration required for TRIG pin is on in order to trigger the burst signal.
-    duration_wait : float
+    `duration_wait` : float
         Duration to wait between consecutive measurements.
-
-    Examples
-    --------
-    Initialize the sensor and measure distance, assuming the TRIG pin is connected to GPIO 23 and
-    the ECHO pin is connected to GPIO 24:
-
-    >>> sensor = UltrasonicSensorHCSR04(23, 24)
-    >>> distance = sensor.measure()
-    >>> print(f"Distance: {round(distance, 3)} meters")
     """
 
+    distance_maximum: float = 4.0
+    distance_minimum: float = 0.02
     duration_timeout: float = 0.038
     duration_trigger: float = 0.00001
     duration_wait: float = 0.000002
@@ -39,13 +36,24 @@ class UltrasonicSensorHCSR04:
 
     Attributes
     ----------
-    _trigger_pin : DigitalOutputDevice
+    `trigger_pin` : DigitalOutputDevice
         GPIO pin used to trigger the sensor.
-    _echo_pin : DigitalInputDevice
+    `echo_pin` : DigitalInputDevice
         GPIO pin used to receive the echo signal.
-    _speed_of_sound : float
+    `speed_of_sound` : float
         Speed of sound in m/s, default is 343.0.
+
+    Examples
+    --------
+    Initialize the sensor and measure distance, assuming the TRIG pin is connected to GPIO 23 and
+    the ECHO pin is connected to GPIO 24:
+
+    >>> sensor = UltrasonicSensorHCSR04(23, 24)
+    >>> distance = sensor.measure()
+    >>> print(f"Distance: {round(distance, 3)} meters")
     """
+
+    _name = "HC-SR04"
 
     def __init__(self, trigger_pin: int, echo_pin: int, speed_of_sound: float = 343.0) -> None:
         self._trigger_pin = DigitalOutputDevice(trigger_pin)
@@ -54,7 +62,9 @@ class UltrasonicSensorHCSR04:
 
     def measure(self) -> float:
         """
-        Measures the distance using the HC-SR04 sensor.
+        Measures the distance to an object in front of the HC-SR04 sensor. The minimum measurable
+        distance is `self.minimum_distance` and the maximum measurable distance is
+        `self.maximum_distance`.
 
         Returns
         -------
@@ -92,8 +102,21 @@ class UltrasonicSensorHCSR04:
         return distance
 
     def reset(self) -> None:
+        """
+        Resets the sensor by closing the TRIG and ECHO pins.
+
+        This method should be called to properly release the GPIO resources
+        when the sensor is no longer needed.
+        """
         self.trigger_pin.close()
         self.echo_pin.close()
+
+    @property
+    def name() -> str:
+        """
+        str: The name of the sensor.
+        """
+        return UltrasonicSensorHCSR04._name
 
     @property
     def trigger_pin(self) -> DigitalOutputDevice:
@@ -115,3 +138,17 @@ class UltrasonicSensorHCSR04:
         float: The speed of sound in m/s.
         """
         return self._speed_of_sound
+
+    @property
+    def maximum_distance() -> float:
+        """
+        float: The maximum measurable distance by the sensor in meters.
+        """
+        return HCSR04Data.distance_maximum
+
+    @property
+    def minimum_distance() -> float:
+        """
+        float: The minimum measurable distance by the sensor in meters.
+        """
+        return HCSR04Data.distance_minimum
