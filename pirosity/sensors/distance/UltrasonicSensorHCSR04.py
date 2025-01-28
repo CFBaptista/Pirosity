@@ -14,9 +14,18 @@ class HCSR04Data:
     duration_timeout : float
         Duration after which the sensor times out if no echo signal is received.
     duration_trigger : float
-        Duration required for Trig pin is on in order to trigger the burst signal.
+        Duration required for TRIG pin is on in order to trigger the burst signal.
     duration_wait : float
         Duration to wait between consecutive measurements.
+
+    Examples
+    --------
+    Initialize the sensor and measure distance, assuming the TRIG pin is connected to GPIO 23 and
+    the ECHO pin is connected to GPIO 24:
+
+    >>> sensor = UltrasonicSensorHCSR04(23, 24)
+    >>> distance = sensor.measure()
+    >>> print(f"Distance: {round(distance, 3)} meters")
     """
 
     duration_timeout: float = 0.038
