@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import time
 
-import RPi.GPIO as GPIO
+from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
 
 @dataclass
@@ -12,17 +12,10 @@ class HCSR04Data:
 
 
 class UltrasonicSensorHCSR04:
-    def __init__(self, pin_trigger: int, pin_echo: int, speed_of_sound: float = 343.0) -> None:
-        self._pin_trigger = pin_trigger
-        self._pin_echo = pin_echo
+    def __init__(self, trigger_pin: int, echo_pin: int, speed_of_sound: float = 343.0) -> None:
+        self._trigger_pin = DigitalOutputDevice(trigger_pin)
+        self._echo_pin = DigitalInputDevice(echo_pin)
         self._speed_of_sound = speed_of_sound
-
-        self._configure_gpio()
-
-    def _configure_gpio(self) -> None:
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self._pin_trigger, GPIO.OUT)
-        GPIO.setup(self._pin_echo, GPIO.IN)
 
     def measure(self) -> float:
         self._trigger_burst()
@@ -32,20 +25,20 @@ class UltrasonicSensorHCSR04:
         return distance
 
     def _trigger_burst(self) -> None:
-        GPIO.output(self.pin_trigger, 0)
+        self.trigger_pin.off()
         time.sleep(HCSR04Data.duration_wait)
-        GPIO.output(self.pin_trigger, 1)
+        self.trigger_pin.on()
         time.sleep(HCSR04Data.duration_trigger)
-        GPIO.output(self.pin_trigger, 0)
+        self.trigger_pin.off()
 
     def _transmit_end_time(self) -> float:
-        while GPIO.input(self.pin_echo) == 0:
+        while not self.echo_pin.is_active:
             continue
         transmitted_signal_end_time = time.time()
         return transmitted_signal_end_time
 
     def _receive_start_time(self) -> float:
-        while GPIO.input(self.pin_echo) == 1:
+        while self.echo_pin.is_active:
             continue
         received_signal_start_time = time.time()
         return received_signal_start_time
@@ -56,15 +49,16 @@ class UltrasonicSensorHCSR04:
         return distance
 
     def reset(self) -> None:
-        GPIO.cleanup()
+        self.trigger_pin.close()
+        self.echo_pin.close()
 
     @property
-    def pin_trigger(self) -> int:
-        return self._pin_trigger
+    def trigger_pin(self) -> DigitalOutputDevice:
+        return self._trigger_pin
 
     @property
-    def pin_echo(self) -> int:
-        return self._pin_echo
+    def echo_pin(self) -> DigitalInputDevice:
+        return self._echo_pin
 
     @property
     def speed_of_sound(self) -> float:
