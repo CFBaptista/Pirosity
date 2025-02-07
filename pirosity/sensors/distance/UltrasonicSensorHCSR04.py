@@ -3,6 +3,8 @@ import time
 
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
+from pirosity.utilities import clip
+
 
 @dataclass(frozen=True)
 class UltrasonicSensorHCSR04Data:
@@ -103,9 +105,10 @@ class UltrasonicSensorHCSR04:
 
     @staticmethod
     def _limit_distance(raw_distance: float) -> float:
-        distance = max(
-            min(raw_distance, UltrasonicSensorHCSR04Data.distance_maximum),
+        distance = clip(
+            raw_distance,
             UltrasonicSensorHCSR04Data.distance_minimum,
+            UltrasonicSensorHCSR04Data.distance_maximum,
         )
         return distance
 
