@@ -74,7 +74,8 @@ class UltrasonicSensorHCSR04:
         self._trigger_burst()
         transmit_end_time = self._transmit_end_time()
         receive_start_time = self._receive_start_time()
-        distance = self._compute_distance(transmit_end_time, receive_start_time)
+        raw_distance = self._compute_distance(transmit_end_time, receive_start_time)
+        distance = UltrasonicSensorHCSR04._limit_distance(raw_distance)
         return distance
 
     def _trigger_burst(self) -> None:
@@ -99,6 +100,11 @@ class UltrasonicSensorHCSR04:
     def _compute_distance(self, transmit_end_time: float, receive_start_time: float) -> float:
         time_elapsed = receive_start_time - transmit_end_time
         distance = self.speed_of_sound * time_elapsed / 2
+        return distance
+
+    @staticmethod
+    def _limit_distance(raw_distance: float) -> float:
+        distance = max(min(raw_distance, HCSR04Data.distance_maximum), HCSR04Data.distance_minimum)
         return distance
 
     def reset(self) -> None:
