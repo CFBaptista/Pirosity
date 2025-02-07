@@ -4,8 +4,8 @@ import time
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
 
-@dataclass
-class HCSR04Data:
+@dataclass(frozen=True)
+class UltrasonicSensorHCSR04Data:
     """
     Data class to hold constants for the HC-SR04 sensor.
 
@@ -28,6 +28,7 @@ class HCSR04Data:
     duration_timeout: float = 0.038
     duration_trigger: float = 0.00001
     duration_wait: float = 0.000002
+    name: str = "HC-SR04"
 
 
 class UltrasonicSensorHCSR04:
@@ -52,8 +53,6 @@ class UltrasonicSensorHCSR04:
     >>> distance = sensor.measure()
     >>> print(f"Distance: {round(distance, 3)} meters")
     """
-
-    _name = "HC-SR04"
 
     def __init__(self, trigger_pin: int, echo_pin: int, speed_of_sound: float = 343.0) -> None:
         self._trigger_pin = DigitalOutputDevice(trigger_pin)
@@ -80,9 +79,9 @@ class UltrasonicSensorHCSR04:
 
     def _trigger_burst(self) -> None:
         self.trigger_pin.off()
-        time.sleep(HCSR04Data.duration_wait)
+        time.sleep(UltrasonicSensorHCSR04Data.duration_wait)
         self.trigger_pin.on()
-        time.sleep(HCSR04Data.duration_trigger)
+        time.sleep(UltrasonicSensorHCSR04Data.duration_trigger)
         self.trigger_pin.off()
 
     def _transmit_end_time(self) -> float:
@@ -104,7 +103,10 @@ class UltrasonicSensorHCSR04:
 
     @staticmethod
     def _limit_distance(raw_distance: float) -> float:
-        distance = max(min(raw_distance, HCSR04Data.distance_maximum), HCSR04Data.distance_minimum)
+        distance = max(
+            min(raw_distance, UltrasonicSensorHCSR04Data.distance_maximum),
+            UltrasonicSensorHCSR04Data.distance_minimum,
+        )
         return distance
 
     def reset(self) -> None:
@@ -116,13 +118,6 @@ class UltrasonicSensorHCSR04:
         """
         self.trigger_pin.close()
         self.echo_pin.close()
-
-    @property
-    def name() -> str:
-        """
-        str: The name of the sensor.
-        """
-        return UltrasonicSensorHCSR04._name
 
     @property
     def trigger_pin(self) -> DigitalOutputDevice:
@@ -144,17 +139,3 @@ class UltrasonicSensorHCSR04:
         float: The speed of sound in m/s.
         """
         return self._speed_of_sound
-
-    @property
-    def maximum_distance() -> float:
-        """
-        float: The maximum measurable distance by the sensor in meters.
-        """
-        return HCSR04Data.distance_maximum
-
-    @property
-    def minimum_distance() -> float:
-        """
-        float: The minimum measurable distance by the sensor in meters.
-        """
-        return HCSR04Data.distance_minimum
