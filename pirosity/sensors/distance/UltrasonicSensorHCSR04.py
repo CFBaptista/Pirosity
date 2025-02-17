@@ -120,20 +120,35 @@ class UltrasonicSensorHCSR04:
     @property
     def trigger_pin(self) -> DigitalOutputDevice:
         """
-        DigitalOutputDevice: The GPIO pin used to trigger the sensor.
+        The GPIO pin used to trigger the sensor.
+
+        Returns
+        -------
+        DigitalOutputDevice
+            The GPIO pin used to trigger the sensor.
         """
         return self._trigger_pin
 
     @property
     def echo_pin(self) -> DigitalInputDevice:
         """
-        DigitalInputDevice: The GPIO pin used to receive the echo signal.
+        The GPIO pin used to receive the echo signal.
+
+        Returns
+        -------
+        DigitalInputDevice
+            The GPIO pin used to receive the echo signal.
         """
         return self._echo_pin
 
     @property
     def speed_of_sound(self) -> float:
         """
-        float: The speed of sound in m/s.
+        The speed used for the speed of sound in meters per second.
+
+        Returns
+        -------
+        float
+            The speed of sound in meters per second.
         """
         return self._speed_of_sound
