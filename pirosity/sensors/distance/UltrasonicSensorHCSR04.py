@@ -3,7 +3,7 @@ import time
 
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
-from pirosity.utilities import clip
+from pirosity.utilities.math import clip
 
 
 @dataclass(frozen=True)
