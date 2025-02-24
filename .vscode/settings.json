@@ -1,5 +1,8 @@
 {
     "editor.formatOnSave": true,
+    "editor.rulers": [
+        100
+    ],
     "python.defaultInterpreterPath": ".venv/Scripts/python",
     "ruff.configuration": "pyproject.toml",
     "ruff.enable": true,
