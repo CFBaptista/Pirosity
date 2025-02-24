@@ -64,8 +64,8 @@ class UltrasonicSensorHCSR04:
     def measure(self) -> float:
         """
         Measures the distance to an object in front of the HC-SR04 sensor. The minimum measurable
-        distance is `self.minimum_distance` and the maximum measurable distance is
-        `self.maximum_distance`.
+        distance is `UltrasonicSensorHCSR04Data.minimum_distance` and the maximum measurable
+        distance is `UltrasonicSensorHCSR04Data.maximum_distance`.
 
         Returns
         -------
