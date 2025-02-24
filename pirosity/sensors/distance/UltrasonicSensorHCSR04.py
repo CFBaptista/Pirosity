@@ -54,6 +54,7 @@ class UltrasonicSensorHCSR04:
     >>> sensor = UltrasonicSensorHCSR04(23, 24)
     >>> distance = sensor.measure()
     >>> print(f"Distance: {round(distance, 3)} meters")
+    >>> sensor.reset()
     """
 
     def __init__(self, trigger_pin: int, echo_pin: int, speed_of_sound: float = 343.0) -> None:
