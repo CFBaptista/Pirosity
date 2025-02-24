@@ -49,7 +49,9 @@ class UltrasonicSensorHCSR04:
     Examples
     --------
     Initialize the sensor and measure distance, assuming the TRIG pin is connected to GPIO 23 and
-    the ECHO pin is connected to GPIO 24:
+    the ECHO pin is connected to GPIO 24. Finally the sensor is reset to release the GPIO resources.
+    This final step is needed to avoid conflicts when restarting an application that uses GPIO pins
+    or when reusing GPIO pins for other applications.
 
     >>> sensor = UltrasonicSensorHCSR04(23, 24)
     >>> distance = sensor.measure()
