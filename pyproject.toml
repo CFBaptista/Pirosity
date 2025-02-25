@@ -1,3 +1,24 @@
+[project]
+name = "pirosity"
+version = "0.1.0-dev"
+description = "ROS2 experiments on a Raspberry Pi"
+authors = [
+    { name = "Carlos Fernando Baptista", email = "cfd.baptista@gmail.com" },
+]
+license = { text = "MIT License" }
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["gpiozero"]
+
+[project.optional-dependencies]
+dev = ["isort", "pytest", "ruff"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+indent = "    "
+skip = ["build", "dist", ".git", "__pycache__"]
+
 [tool.ruff]
 indent-width = 4
 line-length = 100
