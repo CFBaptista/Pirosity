@@ -3,7 +3,7 @@
 <package format="3">
   <name>hcsr04</name>
   <version>0.0.0</version>
-  <description>A ROS2 pacakge for interfacing with the HC-SR04 ultrasonic sensor</description>
+  <description>A ROS2 package for interfacing with the HC-SR04 ultrasonic sensor</description>
   <maintainer email="cfd.baptista@gmail.com">Carlos Fernando Baptista</maintainer>
   <license>MIT</license>
 
