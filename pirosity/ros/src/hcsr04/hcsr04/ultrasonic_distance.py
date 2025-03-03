@@ -1,11 +1,10 @@
-import argparse
 from dataclasses import dataclass
 
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Float64
 
-from pirosity.core.sensors import UltrasonicSensorHCSR04
+from pirosity.core.sensors import UltrasonicSensorHCSR04, UltrasonicSensorHCSR04Data
 
 
 @dataclass(frozen=True)
@@ -30,30 +29,45 @@ class UltrasonicDistancePublisher(Node):
     ROS2 node to publish the distance measured with the HC-SR04 ultrasonic sensor.
     """
 
-    def __init__(
-        self,
-        trigger_pin: int,
-        echo_pin: int,
-        queue_size: int = UltrasonicDistancePublisherData.queue_size,
-        timer: float = UltrasonicDistancePublisherData.timer,
-    ) -> None:
-        """
-        Parameters
-        ----------
-        `trigger_pin` : int
-            GPIO pin number used to trigger the sensor.
-        `echo_pin` : int
-            GPIO pin number used to receive the echo signal.
-        `queue_size` : int, optional (default=10)
-            The size of the message queue.
-        `timer` : float, optional (default=0.5)
-            The period in seconds to publish the measured distance.
-        """
-        self.sensor = UltrasonicSensorHCSR04(trigger_pin, echo_pin)
+    def __init__(self) -> None:
+        self._declare_parameters()
+        parameters = self._get_parameters()
+
+        self.sensor = UltrasonicSensorHCSR04(
+            parameters["trigger_pin"],
+            parameters["echo_pin"],
+            speed_of_sound=parameters["speed_of_sound"],
+        )
 
         super().__init__("ultrasonic_distance_publisher")
-        self.publisher_ = self.create_publisher(Float64, "ultrasonic_distance", queue_size)
-        self.timer = self.create_timer(timer, self.timer_callback)
+        self.publisher_ = self.create_publisher(
+            Float64, "ultrasonic_distance", parameters["queue_size"]
+        )
+        self.timer = self.create_timer(parameters["timer"], self.timer_callback)
+
+    def _declare_parameters(self) -> None:
+        self.declare_parameter("trigger_pin")
+        self.declare_parameter("echo_pin")
+        self.declare_parameter("speed_of_sound", UltrasonicSensorHCSR04Data.speed_of_sound)
+        self.declare_parameter("queue_size", UltrasonicDistancePublisherData.queue_size)
+        self.declare_parameter("timer", UltrasonicDistancePublisherData.timer)
+
+    def _get_parameters(self) -> dict:
+        trigger_pin = self.get_parameter("trigger_pin").get_parameter_value().integer_value
+        echo_pin = self.get_parameter("echo_pin").get_parameter_value().integer_value
+        speed_of_sound = self.get_parameter("speed_of_sound").get_parameter_value().double_value
+        queue_size = self.get_parameter("queue_size").get_parameter_value().integer_value
+        timer = self.get_parameter("timer").get_parameter_value().double_value
+
+        parameters = dict(
+            trigger_pin=trigger_pin,
+            echo_pin=echo_pin,
+            speed_of_sound=speed_of_sound,
+            queue_size=queue_size,
+            timer=timer,
+        )
+
+        return parameters
 
     def timer_callback(self) -> None:
         """
@@ -68,9 +82,7 @@ class UltrasonicDistancePublisher(Node):
 
 def main(arguments=None) -> None:
     rclpy.init(args=arguments)
-    ultrasonic_distance = UltrasonicDistancePublisher(
-        arguments.trigger_pin, arguments.echo_pin, arguments.queue_size, arguments.timer
-    )
+    ultrasonic_distance = UltrasonicDistancePublisher()
 
     rclpy.spin(ultrasonic_distance)
 
@@ -78,42 +90,5 @@ def main(arguments=None) -> None:
     rclpy.shutdown()
 
 
-def parse_command_line_arguments() -> argparse.Namespace:
-    """
-    Parse command line arguments.
-
-    Returns
-    -------
-    argparse.Namespace
-        The parsed command line arguments.
-    """
-    parser = argparse.ArgumentParser(description="HC-SR04 ultrasonic distance publisher")
-    parser.add_argument(
-        "--trigger_pin", type=int, required=True, help="GPIO pin number used to trigger the sensor"
-    )
-    parser.add_argument(
-        "--echo_pin",
-        type=int,
-        required=True,
-        help="GPIO pin number used to receive the echo signal",
-    )
-    parser.add_argument(
-        "--queue_size",
-        type=int,
-        default=UltrasonicDistancePublisherData.queue_size,
-        help="The size of the message queue",
-    )
-    parser.add_argument(
-        "--timer",
-        type=float,
-        default=UltrasonicDistancePublisherData.timer,
-        help="The period in seconds to publish the measured distance",
-    )
-
-    args = parser.parse_args()
-    return args
-
-
 if __name__ == "__main__":
-    arguments = parse_command_line_arguments()
-    main(arguments)
+    main()
