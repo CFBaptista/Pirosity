@@ -6,6 +6,10 @@ from pirosity.core.sensors import UltrasonicSensorHCSR04
 
 
 class UltrasonicDistancePublisher(Node):
+    """
+    ROS2 node to publish the distance measured with the HC-SR04 ultrasonic sensor.
+    """
+
     def __init__(self):
         self.sensor = UltrasonicSensorHCSR04(23, 24)
 
@@ -14,6 +18,9 @@ class UltrasonicDistancePublisher(Node):
         self.timer = self.create_timer(0.5, self.timer_callback)
 
     def timer_callback(self) -> None:
+        """
+        Callback function to publish the measured distance.
+        """
         distance_message = Float64()
         distance_message.data = self.sensor.measure()
 
