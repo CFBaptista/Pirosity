@@ -172,6 +172,5 @@ cython_debug/
 
 # ROS2 workspace
 pirosity/ros/build/
-pirosity/ros/environment/
 pirosity/ros/install/
 pirosity/ros/log/
