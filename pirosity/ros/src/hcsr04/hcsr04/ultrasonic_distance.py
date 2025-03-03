@@ -46,8 +46,8 @@ class UltrasonicDistancePublisher(Node):
         self.timer = self.create_timer(parameters["timer"], self.timer_callback)
 
     def _declare_parameters(self) -> None:
-        self.declare_parameter("trigger_pin")
-        self.declare_parameter("echo_pin")
+        self.declare_parameter("trigger_pin", int)
+        self.declare_parameter("echo_pin", int)
         self.declare_parameter("speed_of_sound", UltrasonicSensorHCSR04Data.speed_of_sound)
         self.declare_parameter("queue_size", UltrasonicDistancePublisherData.queue_size)
         self.declare_parameter("timer", UltrasonicDistancePublisherData.timer)
