@@ -8,7 +8,7 @@ from std_msgs.msg import Float64
 from pirosity.core.sensors import UltrasonicSensorHCSR04
 
 
-@dataclass(froze=True)
+@dataclass(frozen=True)
 class UltrasonicDistancePublisherData:
     """
     Data class to hold constants for the ultrasonic distance publisher.
