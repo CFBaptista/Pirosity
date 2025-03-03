@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 
 import rclpy
+from rcl_interfaces.msg import ParameterDescriptor, ParameterType
 from rclpy.node import Node
-from std_msgs.msg import Float64, ParameterDescriptor, ParameterType
+from std_msgs.msg import Float64
 
 from pirosity.core.sensors import UltrasonicSensorHCSR04, UltrasonicSensorHCSR04Data
 
