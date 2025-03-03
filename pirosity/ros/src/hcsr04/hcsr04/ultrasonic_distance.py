@@ -1,7 +1,7 @@
 import argparse
+from dataclasses import dataclass
 
 import rclpy
-from dataclass import dataclass
 from rclpy.node import Node
 from std_msgs.msg import Float64
 
