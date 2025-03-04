@@ -10,7 +10,7 @@ with open(requirements_filepath) as requirements_file:
 
 setup(
     name=package_name,
-    version="0.1.0.dev0",
+    version="0.0.0",
     packages=find_packages(exclude=["test"]),
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
