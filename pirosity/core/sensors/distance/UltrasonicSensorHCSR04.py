@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 import time
+from dataclasses import dataclass
 
 from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
-from pirosity.utilities.math import clip
+from pirosity.core.utilities.math import clip
 
 
 @dataclass(frozen=True)
@@ -43,8 +43,8 @@ class UltrasonicSensorHCSR04:
         GPIO pin used to trigger the sensor.
     `echo_pin` : DigitalInputDevice
         GPIO pin used to receive the echo signal.
-    `speed_of_sound` : float
-        Speed of sound in m/s, default is 343.0.
+    `speed_of_sound` : float (default=343.0)
+        Speed of sound in meters per second.
 
     Examples
     --------
@@ -60,6 +60,16 @@ class UltrasonicSensorHCSR04:
     """
 
     def __init__(self, trigger_pin: int, echo_pin: int, speed_of_sound: float = 343.0) -> None:
+        """
+        Parameters
+        ----------
+        `trigger_pin` : int
+            GPIO pin number used to trigger the sensor.
+        `echo_pin` : int
+            GPIO pin number used to receive the echo signal.
+        `speed_of_sound` : float, optional (default=343.0)
+            Speed of sound in meters per second.
+        """
         self._trigger_pin = DigitalOutputDevice(trigger_pin)
         self._echo_pin = DigitalInputDevice(echo_pin)
         self._speed_of_sound = speed_of_sound

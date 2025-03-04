@@ -169,3 +169,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# ROS2 workspace
+pirosity/ros/build/
+pirosity/ros/install/
+pirosity/ros/log/
