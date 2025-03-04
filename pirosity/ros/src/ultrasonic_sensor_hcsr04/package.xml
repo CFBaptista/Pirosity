@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>hcsr04</name>
+  <name>ultrasonic_sensor_hcsr04</name>
   <version>0.0.0</version>
   <description>A ROS2 package for interfacing with the HC-SR04 ultrasonic sensor</description>
   <maintainer email="cfd.baptista@gmail.com">Carlos Fernando Baptista</maintainer>

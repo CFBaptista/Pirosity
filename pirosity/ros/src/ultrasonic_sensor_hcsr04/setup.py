@@ -2,7 +2,7 @@ import os
 
 from setuptools import find_packages, setup
 
-package_name = "hcsr04"
+package_name = "ultrasonic_sensor_hcsr04"
 requirements_filepath = os.path.join(os.path.dirname(__file__), "requirements.txt")
 
 with open(requirements_filepath) as requirements_file:
@@ -24,6 +24,8 @@ setup(
     license="MIT",
     tests_require=["pytest"],
     entry_points={
-        "console_scripts": ["ultrasonic_distance = hcsr04.ultrasonic_distance:main"],
+        "console_scripts": [
+            "ultrasonic_distance = ultrasonic_sensor_hcsr04.ultrasonic_distance:main"
+        ],
     },
 )
