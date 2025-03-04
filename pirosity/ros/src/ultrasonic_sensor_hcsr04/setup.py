@@ -25,7 +25,7 @@ setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "ultrasonic_distance = ultrasonic_sensor_hcsr04.ultrasonic_distance:main"
+            "ultrasonic_distance_publisher = ultrasonic_sensor_hcsr04.ultrasonic_distance_publisher:main"
         ],
     },
 )
