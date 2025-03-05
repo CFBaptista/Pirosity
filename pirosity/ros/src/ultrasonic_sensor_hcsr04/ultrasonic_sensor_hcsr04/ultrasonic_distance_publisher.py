@@ -1,3 +1,5 @@
+import os
+import pathlib
 from dataclasses import dataclass
 
 import rclpy
@@ -15,6 +17,8 @@ class UltrasonicDistancePublisherData:
 
     Attributes
     ----------
+    `logfile`: pathlib.Path
+        The path to the log file.
     `speed_of_sound` : float
         Speed of sound in meters per second.
     `queue_size` : int
@@ -23,6 +27,7 @@ class UltrasonicDistancePublisherData:
         The period in seconds to publish the measured distance.
     """
 
+    logfile: pathlib.Path = pathlib.Path("")
     speed_of_sound: float = 343.0
     queue_size: int = 10
     timer: float = 0.5
@@ -39,6 +44,8 @@ class UltrasonicDistancePublisher(Node):
         self._declare_parameters()
         parameters = self._get_parameters()
 
+        self._configure_logging(parameters["logfile"])
+
         self.sensor = UltrasonicSensorHCSR04(
             parameters["trigger_pin"],
             parameters["echo_pin"],
@@ -51,6 +58,15 @@ class UltrasonicDistancePublisher(Node):
         self.timer = self.create_timer(parameters["timer"], self.timer_callback)
 
     def _declare_parameters(self) -> None:
+        self.declare_parameter(
+            "logfile",
+            str(UltrasonicDistancePublisherData.logfile),
+            ParameterDescriptor(
+                name="logfile",
+                type=ParameterType.PARAMETER_STRING,
+                description="GPIO pin used to trigger the sensor.",
+            ),
+        )
         self.declare_parameter(
             "trigger_pin",
             -1,
@@ -98,6 +114,7 @@ class UltrasonicDistancePublisher(Node):
         )
 
     def _get_parameters(self) -> dict:
+        logfile = pathlib.Path(self.get_parameter("logfile").get_parameter_value().string_value)
         trigger_pin = self.get_parameter("trigger_pin").get_parameter_value().integer_value
         echo_pin = self.get_parameter("echo_pin").get_parameter_value().integer_value
         speed_of_sound = self.get_parameter("speed_of_sound").get_parameter_value().double_value
@@ -105,6 +122,7 @@ class UltrasonicDistancePublisher(Node):
         timer = self.get_parameter("timer").get_parameter_value().double_value
 
         parameters = {
+            "logfile": logfile,
             "trigger_pin": trigger_pin,
             "echo_pin": echo_pin,
             "speed_of_sound": speed_of_sound,
@@ -113,6 +131,13 @@ class UltrasonicDistancePublisher(Node):
         }
 
         return parameters
+
+    def _configure_logging(self, logfile: pathlib.Path) -> None:
+        self._logfile = logfile
+
+        if logfile != pathlib.Path(""):
+            os.environ["RCUTILS_LOGGING_BUFFERED_STREAM"] = "1"
+            os.environ["RCUTILS_LOGGING_FILE"] = logfile
 
     def timer_callback(self) -> None:
         """
