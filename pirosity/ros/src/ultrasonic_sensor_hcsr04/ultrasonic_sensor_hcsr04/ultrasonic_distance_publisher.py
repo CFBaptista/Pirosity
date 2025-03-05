@@ -137,7 +137,7 @@ class UltrasonicDistancePublisher(Node):
 
         if logfile != pathlib.Path(""):
             os.environ["RCUTILS_LOGGING_BUFFERED_STREAM"] = "1"
-            os.environ["RCUTILS_LOGGING_FILE"] = logfile
+            os.environ["RCUTILS_LOGGING_FILE"] = str(logfile)
 
     def timer_callback(self) -> None:
         """
